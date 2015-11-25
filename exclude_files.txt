@@ -1,0 +1,6 @@
+﻿bin
+obj
+.FBX
+.hkt
+.xml
+.psd

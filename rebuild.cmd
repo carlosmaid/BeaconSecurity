@@ -1,0 +1,1 @@
+C:\"Program Files (x86)"\Steam\steamapps\common\SpaceEngineersModSDK\Tools\MwmBuilder\MwmBuilder.exe /s:%1 /o:%1
