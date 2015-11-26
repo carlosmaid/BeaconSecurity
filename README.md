@@ -4,7 +4,7 @@
 
 ##What is the point?
 It's a beacon, which itself determines the presence in the vicinity of the grid, where it is, or her, the owner or a member of the faction.
-If the host close to the net or to manage it through the cabin via a remote control or even in some way, the beacon is switched off.
+If the owner close to the grid or manage it through the cabin via a remote control or even in some way, the beacon is switched off.
 Beacon does not work, if the grid is not owned by anyone.
 If the beacon is switched on - grid indestructible, a new blocks can not be installed on the grid (to avoid the possibility of conversion of the ship).
 Adjusting for the beacon to work only for the stations.
