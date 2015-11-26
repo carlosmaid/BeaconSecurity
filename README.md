@@ -31,7 +31,7 @@ Setting the zone of finding the owner.
 2. DistanceBeforeTurningOn(0-10000) - The distance at which no owner to be found. Or the player can simply leave the game. Default: 400
 3. OnlyForStations(on/off) - Turn on/off limitation of the Beacon Security only for stations. Default: off
 4. OnlyWithZeroSpeed(on/off) -  If this option is enabled, a Beacon Security works only on grid with zero speed. Default: on
-5. BuildingNotAllowed(on/off) - Turn on/off the ability to build in the area of the Beacon Security. Default: on
+5. BuildingNotAllowed(on/off) - Turn on/off the ability to build on grid with the Beacon Security. Default: on
 6. LimitGridSizes(0-1000) - Limitation on the sizes for grid in meters. If there are excess size, the Beacon Security would't work. Default: 150. 0 - disabled
 7. LimitPerFaction(1-100) - Limitation on the number of Beacon Security per faction. Default: 30
 8. LimitPerPlayer(1-100) - Limitation on the number of Beacon Security pers player. Default: 3
@@ -51,4 +51,4 @@ Setting the zone of finding the owner.
 
 words: anti-grief, antigrief, indestructible, destructible, admin, private, property, zone, safezone, Beacon, Security
 
-@ 2015 JimLess
+© 2015 JimLess
