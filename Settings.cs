@@ -20,7 +20,8 @@ namespace JimLess
         public ushort LimitGridSizes = 150;
         public ushort MotionShutdownDelay = 5;
         public bool BuildingNotAllowed = true;
-        public List<string> Indestructible = new List<string>();
+        public bool IndestructibleNoBuilds = true;
+        public List<long> Indestructible = new List<long>();
     }
 
 }

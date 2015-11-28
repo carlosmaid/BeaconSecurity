@@ -20,15 +20,17 @@ namespace JimLess
                     return;
 
                 MyCubeGrid targetGrid = targetBlock.CubeGrid as MyCubeGrid;
+                if (targetGrid == null)
+                    return;
 
-                if (targetGrid != null && !targetGrid.DestructibleBlocks)
+                if (!targetGrid.DestructibleBlocks)
                 {
                     Logger.Log.Debug(" * DestructibleBlocks {0}, so DAMAGE IGNORED...", targetGrid.DestructibleBlocks);
                     info.Amount = 0f;
                 }
 
                 // check admins grids
-                if (Core.Settings != null && Core.Settings.Indestructible.Contains(targetGrid.DisplayName))
+                if (Core.Settings != null && Core.Settings.Indestructible.Contains(targetGrid.EntityId))
                 {
                     Logger.Log.Debug(" * Target '{0}' in indestructible list, so DAMAGE IGNORED...", targetGrid.DisplayName);
                     info.Amount = 0f;

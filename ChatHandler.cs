@@ -11,7 +11,7 @@ namespace JimLess
     public class ChatHandler
     {
         #region TextConstants
-        private static readonly string BSHELP = @"/bs help [1-9] - Show this page or explanation of variables
+        private static readonly string BSHELP = @"/bs help [1-10] - Show this page or explanation of variables
 /bs config  - Show current settings
 admin commands:
 /bs on/off - Enable / disable this mod
@@ -24,17 +24,18 @@ examples:
 
 @ 2015 JimLess 
 ";
-        private static readonly string BSHELP_CHAT = @"/bs help [1-9], /bs config, /bs set number/name value,  /bs on/off, /bs debug, /bs list/find/add/rem/clear";
+        private static readonly string BSHELP_CHAT = @"/bs help [1-10], /bs config, /bs set number/name value,  /bs on/off, /bs debug, /bs list/find/add/rem/clear";
         private static readonly List<string> BSHELP_VARIABLES = new List<string>() {
 "1) DelayBeforeTurningOn(0-3600) - The delay before turning on protection in seconds. This time the owner should not be in the zone of action Beacon Security. Default: 120",
 "2) DistanceBeforeTurningOn(0-10000) - The distance at which no owner to be found. Or the player can simply leave the game. Default: 400",
 "3) OnlyForStations(on/off) - Turn on/off limitation of the Beacon Security only for stations. Default: off",
 "4) OnlyWithZeroSpeed(on/off) -  If this option is enabled, a Beacon Security works only on grid with zero speed. Default: on",
 "5) BuildingNotAllowed(on/off) - Turn on/off the ability to build on grid with the Beacon Security. Default: on",
-"6) LimitGridSizes(0-1000) - Limitation on the sizes for grid in meters. If there are excess size, the Beacon Security would't work. Default: 150. 0 - disabled",
-"7) LimitPerFaction(1-100) - Limitation on the number of Beacon Security per faction. Default: 30",
-"8) LimitPerPlayer(1-100) - Limitation on the number of Beacon Security pers player. Default: 3",
-"9) CleaningFrequency(0-3600) - How often is the cleaning in seconds. Default: 5. 0 - disabled"
+"6) IndestructibleNoBuilds(on/off) - Turn on/off the ability to build on indestructible grids. Default: on",
+"7) LimitGridSizes(0-1000) - Limitation on the sizes for grid in meters. If there are excess size, the Beacon Security would't work. Default: 150. 0 - disabled",
+"8) LimitPerFaction(1-100) - Limitation on the number of Beacon Security per faction. Default: 30",
+"9) LimitPerPlayer(1-100) - Limitation on the number of Beacon Security pers player. Default: 3",
+"10) CleaningFrequency(0-3600) - How often is the cleaning in seconds. Default: 5. 0 - disabled"
         };
         #endregion TextConstants
 
@@ -61,7 +62,7 @@ examples:
                         var index = 0;
                         try { index = Int32.Parse(arguments); }
                         catch { }
-                        if (index < 1 || index > 9)
+                        if (index < 1 || index > 10)
                         {
                             MyAPIGateway.Utilities.ShowMissionScreen("Help", "Beacon ", "Security", BSHELP);
                             MyAPIGateway.Utilities.ShowMessage(Core.MODSAY, BSHELP_CHAT);
@@ -84,16 +85,18 @@ examples:
 3) OnlyForStations(on/off,D:off) = {2}
 4) OnlyWithZeroSpeed(on/off,D:on) = {3}
 5) BuildingNotAllowed(on/off,D:on) = {4}
-6) LimitGridSizes(0-1000,D:150) = {5}
-7) LimitPerFaction(1-100,D:30) = {6}
-8) LimitPerPlayer(1-100,D:3) = {7}
-9) CleaningFrequency(0-3600,D:5) = {8}
+6) IndestructibleNoBuilds(on/off,D:on) = {5}
+7) LimitGridSizes(0-1000,D:150) = {6}
+8) LimitPerFaction(1-100,D:30) = {7}
+9) LimitPerPlayer(1-100,D:3) = {8}
+10) CleaningFrequency(0-3600,D:5) = {9}
 ",
     Core.Settings.DelayBeforeTurningOn,
     Core.Settings.DistanceBeforeTurningOn,
     Core.Settings.OnlyForStations,
     Core.Settings.OnlyWithZeroSpeed,
     Core.Settings.BuildingNotAllowed,
+    Core.Settings.IndestructibleNoBuilds,
     Core.Settings.LimitGridSizes,
     Core.Settings.LimitPerFaction,
     Core.Settings.LimitPerPlayer,
@@ -136,22 +139,42 @@ examples:
                             }
                             else if (internalCommand.Equals("list", StringComparison.OrdinalIgnoreCase))
                             {
-                                string list = String.Join(", ", Core.Settings.Indestructible.ToArray());
-                                MyAPIGateway.Utilities.ShowMessage(Core.MODSAY, string.Format("Indestructible list: {0}", (Core.Settings.Indestructible.Count > 0) ? list : "[EMPTY]"));
+                                List<string> GridNames = new List<string>();
+                                List<long> removed = new List<long>();
+                                foreach (long entId in Core.Settings.Indestructible)
+                                {
+                                    string gridName = GetGridName(entId);
+                                    if (gridName != null)
+                                        GridNames.Add(gridName);
+                                    else
+                                        removed.Add(entId);
+                                }
+                                if (removed.Count > 0)
+                                {
+                                    foreach (long entId in removed)
+                                        Core.Settings.Indestructible.Remove(entId);
+                                    Core.SendSettingsToServer(Core.Settings, MyAPIGateway.Session.Player.SteamUserId);
+                                    MyAPIGateway.Utilities.ShowMessage(Core.MODSAY, string.Format("{0} removed grids cleaned from the list...", removed.Count));
+                                }
+                                string list = String.Join(", ", GridNames.ToArray());
+                                MyAPIGateway.Utilities.ShowMessage(Core.MODSAY, string.Format("Indestructible list: {0}", (GridNames.Count > 0) ? list : "[EMPTY]"));
                             }
                             else if (internalCommand.Equals("add", StringComparison.OrdinalIgnoreCase))
                             {
                                 if (arguments.Length > 0)
                                 {
-                                    if (arguments.Length < 48)
+                                    long entId = GetGridEntityId(arguments);
+
+                                    if (entId > 0)
                                     {
-                                        if (Core.Settings.Indestructible.Contains(arguments))
+
+                                        if (Core.Settings.Indestructible.Contains(entId))
                                         {
                                             MyAPIGateway.Utilities.ShowMessage(Core.MODSAY, string.Format("Can't add grid name '{0}', already in list...", arguments));
                                         }
                                         else
                                         {
-                                            Core.Settings.Indestructible.Add(arguments);
+                                            Core.Settings.Indestructible.Add(entId);
                                             Core.SendSettingsToServer(Core.Settings, MyAPIGateway.Session.Player.SteamUserId);
 
                                             MyAPIGateway.Utilities.ShowMessage(Core.MODSAY, string.Format("Grid name '{0}' added.", arguments));
@@ -159,7 +182,7 @@ examples:
                                     }
                                     else
                                     {
-                                        MyAPIGateway.Utilities.ShowMessage(Core.MODSAY, string.Format("Error... Length of grid name limited to 48 chars."));
+                                        MyAPIGateway.Utilities.ShowMessage(Core.MODSAY, string.Format("Grid name '{0}' not found...", arguments));
                                     }
                                 }
                                 else
@@ -167,11 +190,12 @@ examples:
                                     List<string> added = new List<string>();
                                     foreach (string gridname in m_lastFound)
                                     {
-
-                                        if (!Core.Settings.Indestructible.Contains(gridname))
+                                        long entId = GetGridEntityId(gridname);
+                                        if (entId <= 0) continue;
+                                        if (!Core.Settings.Indestructible.Contains(entId))
                                         {
                                             added.Add(gridname);
-                                            Core.Settings.Indestructible.Add(gridname);
+                                            Core.Settings.Indestructible.Add(entId);
                                         }
                                     }
 
@@ -184,17 +208,24 @@ examples:
                             {
                                 if (arguments.Length > 0)
                                 {
-
-                                    if (!Core.Settings.Indestructible.Contains(arguments))
+                                    long entId = GetGridEntityId(arguments);
+                                    if (entId > 0)
                                     {
-                                        MyAPIGateway.Utilities.ShowMessage(Core.MODSAY, string.Format("Grid name '{0}' not found in list...", arguments));
+                                        if (!Core.Settings.Indestructible.Contains(entId))
+                                        {
+                                            MyAPIGateway.Utilities.ShowMessage(Core.MODSAY, string.Format("Grid name '{0}' not found in list...", arguments));
+                                        }
+                                        else
+                                        {
+                                            Core.Settings.Indestructible.Remove(entId);
+                                            Core.SendSettingsToServer(Core.Settings, MyAPIGateway.Session.Player.SteamUserId);
+
+                                            MyAPIGateway.Utilities.ShowMessage(Core.MODSAY, string.Format("Grid name '{0}' removed.", arguments));
+                                        }
                                     }
                                     else
                                     {
-                                        Core.Settings.Indestructible.Remove(arguments);
-                                        Core.SendSettingsToServer(Core.Settings, MyAPIGateway.Session.Player.SteamUserId);
-
-                                        MyAPIGateway.Utilities.ShowMessage(Core.MODSAY, string.Format("Grid name '{0}' removed.", arguments));
+                                        MyAPIGateway.Utilities.ShowMessage(Core.MODSAY, string.Format("Grid name '{0}' not found...", arguments));
                                     }
                                 }
                                 else
@@ -202,11 +233,12 @@ examples:
                                     List<string> removed = new List<string>();
                                     foreach (string gridname in m_lastFound)
                                     {
-
-                                        if (Core.Settings.Indestructible.Contains(gridname))
+                                        long entId = GetGridEntityId(gridname);
+                                        if (entId <= 0) continue;
+                                        if (Core.Settings.Indestructible.Contains(entId))
                                         {
                                             removed.Add(gridname);
-                                            Core.Settings.Indestructible.Remove(gridname);
+                                            Core.Settings.Indestructible.Remove(entId);
                                         }
                                     }
 
@@ -246,27 +278,6 @@ examples:
                                 {
                                     Logger.Log.Error("Exception in command find: {0}", ex.Message);
                                     MyAPIGateway.Utilities.ShowMessage(Core.MODSAY, string.Format("Exception: {0}", ex.Message));
-                                }
-                            }
-                            else if (internalCommand.Equals("findadd", StringComparison.OrdinalIgnoreCase))
-                            {
-                                try
-                                {
-                                    uint value = UInt16.Parse(arguments);
-                                    if (value < 1)
-                                        value = 1;
-                                    if (value > 100000)
-                                        value = 100000;
-                                    Vector3D pos = MyAPIGateway.Session.Player.GetPosition();
-                                    BoundingSphereD sphere = new BoundingSphereD(pos, value);
-                                    List<IMyEntity> entities = MyAPIGateway.Entities.GetEntitiesInSphere(ref sphere);
-
-                                    string str = String.Join(", ", entities.FindAll(x => x is IMyCubeGrid).Select(x => (x as IMyCubeGrid).DisplayName).ToArray());
-                                    MyAPIGateway.Utilities.ShowMessage(Core.MODSAY, string.Format("In radius {0}m found: {1}", value, str));
-                                }
-                                catch (Exception ex)
-                                {
-                                    Logger.Log.Error("Exception in command find: {0}", ex.Message);
                                 }
                             }
                             else if (internalCommand.Equals("set", StringComparison.OrdinalIgnoreCase))
@@ -363,7 +374,21 @@ examples:
                                         }
                                         ResultMessage = string.Format("BuildingNotAllowed changed to {0}", (Core.Settings.BuildingNotAllowed) ? "On" : "Off");
                                     }
-                                    else if (argument[0].Equals("6") || argument[0].Equals("LimitGridSizes", StringComparison.OrdinalIgnoreCase))
+                                    else if (argument[0].Equals("6") || argument[0].Equals("IndestructibleNoBuilds", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (argument[1].Equals("on", StringComparison.OrdinalIgnoreCase) || argument[1].Equals("true", StringComparison.OrdinalIgnoreCase))
+                                        {
+                                            Core.Settings.IndestructibleNoBuilds = true;
+                                            changed = true;
+                                        }
+                                        else if (argument[1].Equals("off", StringComparison.OrdinalIgnoreCase) || argument[1].Equals("false", StringComparison.OrdinalIgnoreCase))
+                                        {
+                                            Core.Settings.IndestructibleNoBuilds = false;
+                                            changed = true;
+                                        }
+                                        ResultMessage = string.Format("IndestructibleNoBuilds changed to {0}", (Core.Settings.IndestructibleNoBuilds) ? "On" : "Off");
+                                    }
+                                    else if (argument[0].Equals("7") || argument[0].Equals("LimitGridSizes", StringComparison.OrdinalIgnoreCase))
                                     {
                                         try
                                         {
@@ -384,7 +409,7 @@ examples:
                                             MyAPIGateway.Utilities.ShowMessage(Core.MODSAY, string.Format("Incorrect number. {0}", ex.Message));
                                         }
                                     }
-                                    else if (argument[0].Equals("7") || argument[0].Equals("LimitPerFaction", StringComparison.OrdinalIgnoreCase))
+                                    else if (argument[0].Equals("8") || argument[0].Equals("LimitPerFaction", StringComparison.OrdinalIgnoreCase))
                                     {
                                         try
                                         {
@@ -405,7 +430,7 @@ examples:
                                             MyAPIGateway.Utilities.ShowMessage(Core.MODSAY, string.Format("Incorrect number. {0}", ex.Message));
                                         }
                                     }
-                                    else if (argument[0].Equals("8") || argument[0].Equals("LimitPerPlayer", StringComparison.OrdinalIgnoreCase))
+                                    else if (argument[0].Equals("9") || argument[0].Equals("LimitPerPlayer", StringComparison.OrdinalIgnoreCase))
                                     {
                                         try
                                         {
@@ -426,7 +451,7 @@ examples:
                                             MyAPIGateway.Utilities.ShowMessage(Core.MODSAY, string.Format("Incorrect number. {0}", ex.Message));
                                         }
                                     }
-                                    else if (argument[0].Equals("9") || argument[0].Equals("CleaningFrequency", StringComparison.OrdinalIgnoreCase))
+                                    else if (argument[0].Equals("10") || argument[0].Equals("CleaningFrequency", StringComparison.OrdinalIgnoreCase))
                                     {
                                         try
                                         {
@@ -479,5 +504,30 @@ examples:
             }
         }
 
+        private static long GetGridEntityId(string name)
+        {
+            Logger.Log.Debug("GetGridEntityId() - {0}", name);
+            HashSet<IMyEntity> entities = new HashSet<IMyEntity>();
+            MyAPIGateway.Entities.GetEntities(entities, x => x is IMyCubeGrid);
+            foreach (IMyCubeGrid grid in entities)
+            {
+                if (grid.DisplayName == name)
+                    return grid.EntityId;
+            }
+            return 0;
+        }
+
+        private static string GetGridName(long entityId)
+        {
+            Logger.Log.Debug("GetGridName() - {0}", entityId);
+            HashSet<IMyEntity> entities = new HashSet<IMyEntity>();
+            MyAPIGateway.Entities.GetEntities(entities, x => x is IMyCubeGrid);
+            foreach (IMyCubeGrid entity in entities)
+            {
+                if (entity.EntityId == entityId)
+                    return entity.DisplayName;
+            }
+            return null;
+        }
     }
 }

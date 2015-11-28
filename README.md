@@ -13,7 +13,7 @@ Setting delay beacon
 Setting the zone of finding the owner.
 
 ##Chat Commands
-- /bs help [1-9] - Show this page or explanation of variables
+- /bs help [1-10] - Show this page or explanation of variables
 - /bs config  - Show current settings
 
 ###Admin chat commands
@@ -32,15 +32,16 @@ Setting the zone of finding the owner.
 3. OnlyForStations(on/off) - Turn on/off limitation of the Beacon Security only for stations. Default: off
 4. OnlyWithZeroSpeed(on/off) -  If this option is enabled, a Beacon Security works only on grid with zero speed. Default: on
 5. BuildingNotAllowed(on/off) - Turn on/off the ability to build on grid with the Beacon Security. Default: on
-6. LimitGridSizes(0-1000) - Limitation on the sizes for grid in meters. If there are excess size, the Beacon Security would't work. Default: 150. 0 - disabled
-7. LimitPerFaction(1-100) - Limitation on the number of Beacon Security per faction. Default: 30
-8. LimitPerPlayer(1-100) - Limitation on the number of Beacon Security pers player. Default: 3
-9. CleaningFrequency(0-3600) - How often is the cleaning in seconds. Default: 5. 0 - disabled
+6. IndestructibleNoBuilds(on/off) - Turn on/off the ability to build on indestructible grids. Default: on
+7. LimitGridSizes(0-1000) - Limitation on the sizes for grid in meters. If there are excess size, the Beacon Security would't work. Default: 150. 0 - disabled
+8. LimitPerFaction(1-100) - Limitation on the number of Beacon Security per faction. Default: 30
+9. LimitPerPlayer(1-100) - Limitation on the number of Beacon Security pers player. Default: 3
+10. CleaningFrequency(0-3600) - How often is the cleaning in seconds. Default: 5. 0 - disabled
 
 ##Some chat commands examples
 ```
 /bs set 1 10
-/bs set 9 100
+/bs set 10 100
 /bs set BuildingNotAllowed on
 /bs set OnlyForStations false
 /bs find 10 - found 3 grids: Platform 3545, Large Ship 2334, Small Ship 9943

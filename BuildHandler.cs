@@ -17,20 +17,19 @@ namespace JimLess
             {
                 Logger.Log.Debug("BeaconSecurity.grid_OnBlockAdded {0}", obj);
 
-                if (Core.Settings != null && !Core.Settings.BuildingNotAllowed)
-                    return; // allways can build...
-
                 MyCubeGrid grid = obj.CubeGrid as MyCubeGrid;
+                if (grid == null)
+                    return;
 
                 bool removing = false;
-                if (grid != null && !grid.DestructibleBlocks)
+                if (!grid.DestructibleBlocks && Core.Settings != null && Core.Settings.BuildingNotAllowed)
                 {
                     Logger.Log.Debug(" * DestructibleBlocks {0}, so block removed...", grid.DestructibleBlocks);
                     removing = true;
                 }
 
                 // check admins grids
-                if (Core.Settings != null && Core.Settings.Indestructible.Contains(grid.DisplayName))
+                if (Core.Settings != null && Core.Settings.IndestructibleNoBuilds && Core.Settings.Indestructible.Contains(grid.EntityId))
                 {
                     Logger.Log.Debug(" * Target '{0}' in indestructible list, so block removed...", grid.DisplayName);
                     removing = true;
