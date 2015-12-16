@@ -269,7 +269,7 @@ namespace JimLess
             }
             catch (Exception ex)
             {
-                Logger.Log.Error("EXCEPTION at BeaconSecurity.UpdateBeforeSimulation(): {0}", ex.Message);
+                Logger.Log.Error("EXCEPTION at BeaconSecurity.UpdateBeforeSimulation(): {0} {1}", ex.Message, ex.StackTrace);
             }
         }
 
@@ -279,6 +279,8 @@ namespace JimLess
                 return false;
 
             Sandbox.ModAPI.Ingame.IMyGridTerminalSystem gridTerminal = MyAPIGateway.TerminalActionsHelper.GetTerminalSystemForGrid(grid);
+            if (gridTerminal == null)
+                return false;
             List<Sandbox.ModAPI.Ingame.IMyTerminalBlock> blocks = new List<Sandbox.ModAPI.Ingame.IMyTerminalBlock>();
             gridTerminal.GetBlocks(blocks);
             foreach (var block in blocks)
@@ -293,6 +295,8 @@ namespace JimLess
         public static void gridDestructible(IMyCubeGrid grid, bool enable)
         {
             Sandbox.ModAPI.Ingame.IMyGridTerminalSystem gridTerminal = MyAPIGateway.TerminalActionsHelper.GetTerminalSystemForGrid(grid);
+            if (gridTerminal == null)
+                return;
             List<Sandbox.ModAPI.Ingame.IMyTerminalBlock> blocks = new List<Sandbox.ModAPI.Ingame.IMyTerminalBlock>();
             gridTerminal.GetBlocks(blocks);
             HashSet<Sandbox.ModAPI.Ingame.IMyCubeGrid> applied = new HashSet<Sandbox.ModAPI.Ingame.IMyCubeGrid>();
