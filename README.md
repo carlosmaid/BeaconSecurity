@@ -50,6 +50,15 @@ Setting the zone of finding the owner.
 ```
 
 
+##Donation
+PayPal:
+jimless2015@gmail.com
+Webmoney:
+R711901402714
+Z227667032008
+Money.Yandex.ru
+41001129000883
+
 words: anti-grief, antigrief, indestructible, destructible, admin, private, property, zone, safezone, Beacon, Security
 
 © 2015 JimLess
