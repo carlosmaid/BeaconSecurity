@@ -238,10 +238,13 @@ namespace JimLess
                 {
                     Vector3 size = entGrid.LocalAABB.Size;
                     long limit = Core.Settings.LimitGridSizes;
-                    Logger.Log.Debug("Limitation for sizes: {0}   {1}x{2}x{3}", limit, size.X, size.Y, size.Z);
-                    if (size.X > limit || size.Y > limit || size.Z > limit)
+                    if (limit > 0)
                     {
-                        chkSizes = false;
+                        Logger.Log.Debug("Limitation for sizes: {0}   {1}x{2}x{3}", limit, size.X, size.Y, size.Z);
+                        if (size.X > limit || size.Y > limit || size.Z > limit)
+                        {
+                            chkSizes = false;
+                        }
                     }
                 }
 
