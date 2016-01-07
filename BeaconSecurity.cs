@@ -211,15 +211,24 @@ namespace JimLess
                 {
                     // get relations between player and beacon
                     MyRelationsBetweenPlayerAndBlock relation = m_block.GetUserRelationToOwner(player.PlayerID);
-                    if (relation == MyRelationsBetweenPlayerAndBlock.Owner || relation == MyRelationsBetweenPlayerAndBlock.FactionShare)
-                    {  // if player has rights to this beacon, check in radius
-                        // spaceman or ship, get world boundingbox
-                        BoundingBoxD playerObject = (player.Controller.ControlledEntity is IMyCharacter) ? player.Controller.ControlledEntity.Entity.WorldAABB : player.Controller.ControlledEntity.Entity.GetTopMostParent().WorldAABB;
-                        if (SphereOwner.Contains(playerObject) != ContainmentType.Disjoint)
-                        {   // user is in sphere, set last seen date
-                            m_lastOwnerSeen = DTNow;
-                        }
+                    if (relation != MyRelationsBetweenPlayerAndBlock.Owner && relation != MyRelationsBetweenPlayerAndBlock.FactionShare)
+                        continue;
+                    // if player has rights to this beacon, check in radius
+
+                    if (Core.Settings.DistanceBeforeTurningOn <= 0)
+                    { // we need just check if player online, any of group
+                        m_lastOwnerSeen = DTNow;
+                        break;
                     }
+
+                    // spaceman or ship, get world boundingbox
+                    BoundingBoxD playerObject = (player.Controller.ControlledEntity is IMyCharacter) ? player.Controller.ControlledEntity.Entity.WorldAABB : player.Controller.ControlledEntity.Entity.GetTopMostParent().WorldAABB;
+                    if (SphereOwner.Contains(playerObject) != ContainmentType.Disjoint)
+                    {   // user is in sphere, set last seen date
+                        m_lastOwnerSeen = DTNow;
+                        break;
+                    }
+
                 }
 
                 // Next part - Check the switching conditions 

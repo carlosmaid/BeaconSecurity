@@ -28,7 +28,7 @@ Setting the zone of finding the owner.
 
 ##Config variables
 1. DelayBeforeTurningOn(0-3600) - The delay before turning on protection in seconds. This time the owner should not be in the zone of action Beacon Security. Default: 60
-2. DistanceBeforeTurningOn(0-10000) - The distance at which no owner to be found. Or the player can simply leave the game. Default: 400
+2. DistanceBeforeTurningOn(0-10000) - The distance at which no owner to be found. Or the player can simply leave the game.If value set to 0, search infinity space for owner, in other words checks owners online.Default: 400
 3. OnlyForStations(on/off) - Turn on/off limitation of the Beacon Security only for stations. Default: off
 4. OnlyWithZeroSpeed(on/off) -  If this option is enabled, a Beacon Security works only on grid with zero speed. Default: on
 5. BuildingNotAllowed(on/off) - Turn on/off the ability to build on grid with the Beacon Security. Default: on
