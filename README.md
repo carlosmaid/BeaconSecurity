@@ -22,8 +22,8 @@ Setting the zone of finding the owner.
 - /bs set number/name value - Set variable, you can use numbers and on/off, true/false
 - /bs list - List of indestructible grids
 - /bs find radius - Look for the nearest grid specified radius. Then you can add them using the command /bs add or delete /bs rem
-- /bs add GridName - Add a grid to the list indestructible
-- /bs rem GridName - Remove the grid from the list indestructible
+- /bs add GridName|EntityId - Add a grid to the list indestructible
+- /bs rem GridName|EntityId - Remove the grid from the list indestructible
 - /bs clear - Clearing the list
 
 ##Config variables

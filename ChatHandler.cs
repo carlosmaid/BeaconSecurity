@@ -140,31 +140,29 @@ examples:
                             else if (internalCommand.Equals("list", StringComparison.OrdinalIgnoreCase))
                             {
                                 List<string> GridNames = new List<string>();
-                                List<long> removed = new List<long>();
+                                List<string> GridNamesNotFound = new List<string>();
                                 foreach (long entId in Core.Settings.Indestructible)
                                 {
                                     string gridName = GetGridName(entId);
                                     if (gridName != null)
-                                        GridNames.Add(gridName);
+                                        GridNames.Add(string.Format("'{0}'", gridName, entId));
                                     else
-                                        removed.Add(entId);
-                                }
-                                if (removed.Count > 0)
-                                {
-                                    foreach (long entId in removed)
-                                        Core.Settings.Indestructible.Remove(entId);
-                                    Core.SendSettingsToServer(Core.Settings, MyAPIGateway.Session.Player.SteamUserId);
-                                    MyAPIGateway.Utilities.ShowMessage(Core.MODSAY, string.Format("{0} removed grids cleaned from the list...", removed.Count));
+                                        GridNamesNotFound.Add("id[" + entId + "]");
                                 }
                                 string list = String.Join(", ", GridNames.ToArray());
+                                string nflist = String.Join(", ", GridNamesNotFound.ToArray());
+                                
                                 MyAPIGateway.Utilities.ShowMessage(Core.MODSAY, string.Format("Indestructible list: {0}", (GridNames.Count > 0) ? list : "[EMPTY]"));
+                                if (GridNamesNotFound.Count > 0)
+                                    MyAPIGateway.Utilities.ShowMessage(Core.MODSAY, string.Format("Currently not found: {0}",  nflist));
                             }
                             else if (internalCommand.Equals("add", StringComparison.OrdinalIgnoreCase))
                             {
                                 if (arguments.Length > 0)
                                 {
-                                    long entId = GetGridEntityId(arguments);
-
+                                    long entId = 0;
+                                    if (!long.TryParse(arguments, out entId))
+                                        entId = GetGridEntityId(arguments);
                                     if (entId > 0)
                                     {
 
@@ -208,7 +206,9 @@ examples:
                             {
                                 if (arguments.Length > 0)
                                 {
-                                    long entId = GetGridEntityId(arguments);
+                                    long entId = 0;
+                                    if (!long.TryParse(arguments, out entId))
+                                        entId = GetGridEntityId(arguments);
                                     if (entId > 0)
                                     {
                                         if (!Core.Settings.Indestructible.Contains(entId))
