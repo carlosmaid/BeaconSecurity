@@ -1,18 +1,12 @@
-﻿using System;
+﻿using Sandbox.Common.ObjectBuilders;
+using Sandbox.Definitions;
+using Sandbox.Game.Entities;
+using Sandbox.ModAPI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-
-using Sandbox.Game.Entities;
-using Sandbox.Game.Entities.Character;
-using Sandbox.ModAPI;
-using Sandbox.Common;
+using VRage.Game.Components;
 using VRage.ModAPI;
-using Sandbox.Common.ObjectBuilders;
-using System.Text.RegularExpressions;
-using System.Text;
-using System.Reflection;
-using Sandbox.Definitions;
-using VRageMath;
 
 namespace JimLess
 {

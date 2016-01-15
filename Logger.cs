@@ -1,7 +1,6 @@
-﻿using System;
+﻿using Sandbox.ModAPI;
+using System;
 using System.Text;
-
-using Sandbox.ModAPI;
 
 namespace JimLess
 {
