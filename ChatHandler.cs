@@ -16,14 +16,14 @@ admin commands:
 /bs on/off - Enable / disable this mod
 /bs debug - Enable / disable this debug
 /bs set number/name value - Set variable, you can use numbers and on/off, true/false
-/bs find/list/add/rem/clear - Find,List,Add,Remove,Clear of indestructible grids
+/bs find/list/add/rem/clear/buildon - Find,List,Add,Remove,Clear and override BuildOn for indestructible grids
 examples:
  /bs set 1 1 or /bs set DelayBeforeTurningOn 1
  /bs add Platform 3534 or /bs find 100 and /bs add
 
 @ 2015 JimLess 
 ";
-        private static readonly string BSHELP_CHAT = @"/bs help [1-10], /bs config, /bs set number/name value,  /bs on/off, /bs debug, /bs list/find/add/rem/clear";
+        private static readonly string BSHELP_CHAT = @"/bs help [1-10], /bs config, /bs set number/name value,  /bs on/off, /bs debug, /bs list/find/add/rem/clear/buildon";
         private static readonly List<string> BSHELP_VARIABLES = new List<string>() {
 "1) DelayBeforeTurningOn(0-3600) - The delay before turning on protection in seconds. This time the owner should not be in the zone of action Beacon Security. Default: 120",
 "2) DistanceBeforeTurningOn(0-10000) - The distance at which no owner to be found. Or the player can simply leave the game. Default: 400",
@@ -144,16 +144,16 @@ examples:
                                 {
                                     string gridName = GetGridName(entId);
                                     if (gridName != null)
-                                        GridNames.Add(string.Format("'{0}'", gridName, entId));
+                                        GridNames.Add(string.Format("'{0}'{1}", gridName, Core.Settings.IndestructibleOverrideBuilds.Contains(entId)?"[BO]":""));
                                     else
-                                        GridNamesNotFound.Add("id[" + entId + "]");
+                                        GridNamesNotFound.Add(string.Format("id[{0}]{1}", entId, Core.Settings.IndestructibleOverrideBuilds.Contains(entId) ? "[BO]" : ""));
                                 }
                                 string list = String.Join(", ", GridNames.ToArray());
                                 string nflist = String.Join(", ", GridNamesNotFound.ToArray());
-                                
+
                                 MyAPIGateway.Utilities.ShowMessage(Core.MODSAY, string.Format("Indestructible list: {0}", (GridNames.Count > 0) ? list : "[EMPTY]"));
                                 if (GridNamesNotFound.Count > 0)
-                                    MyAPIGateway.Utilities.ShowMessage(Core.MODSAY, string.Format("Currently not found: {0}",  nflist));
+                                    MyAPIGateway.Utilities.ShowMessage(Core.MODSAY, string.Format("Currently not found: {0}", nflist));
                             }
                             else if (internalCommand.Equals("add", StringComparison.OrdinalIgnoreCase))
                             {
@@ -201,7 +201,7 @@ examples:
                                     MyAPIGateway.Utilities.ShowMessage(Core.MODSAY, string.Format("Added {0} grid names: {1}", added.Count, list));
                                 }
                             }
-                            else if (internalCommand.Equals("rem", StringComparison.OrdinalIgnoreCase) || internalCommand.Equals("del", StringComparison.OrdinalIgnoreCase))
+                            else if (internalCommand.Equals("rem", StringComparison.OrdinalIgnoreCase) || internalCommand.Equals("remove", StringComparison.OrdinalIgnoreCase) || internalCommand.Equals("del", StringComparison.OrdinalIgnoreCase))
                             {
                                 if (arguments.Length > 0)
                                 {
@@ -216,6 +216,8 @@ examples:
                                         }
                                         else
                                         {
+                                            if (Core.Settings.IndestructibleOverrideBuilds.Contains(entId))
+                                                Core.Settings.IndestructibleOverrideBuilds.Remove(entId);
                                             Core.Settings.Indestructible.Remove(entId);
                                             Core.SendSettingsToServer(Core.Settings, MyAPIGateway.Session.Player.SteamUserId);
 
@@ -244,6 +246,57 @@ examples:
                                     string list = String.Join(", ", removed.ToArray());
                                     Core.SendSettingsToServer(Core.Settings, MyAPIGateway.Session.Player.SteamUserId);
                                     MyAPIGateway.Utilities.ShowMessage(Core.MODSAY, string.Format("Removed {0} grid names: {1}", removed.Count, list));
+                                }
+                            }
+                            else if (internalCommand.Equals("bo", StringComparison.OrdinalIgnoreCase) || internalCommand.Equals("buildon", StringComparison.OrdinalIgnoreCase))
+                            {
+                                if (arguments.Length > 0)
+                                {
+                                    long entId = 0;
+                                    if (!long.TryParse(arguments, out entId))
+                                        entId = GetGridEntityId(arguments);
+                                    if (entId > 0)
+                                    {
+                                        if (!Core.Settings.Indestructible.Contains(entId))
+                                        {
+                                            MyAPIGateway.Utilities.ShowMessage(Core.MODSAY, string.Format("Grid name '{0}' not found in list...", arguments));
+                                        }
+                                        else
+                                        {
+                                            if (Core.Settings.IndestructibleOverrideBuilds.Contains(entId))
+                                                Core.Settings.IndestructibleOverrideBuilds.Remove(entId);
+                                            else
+                                                Core.Settings.IndestructibleOverrideBuilds.Add(entId);
+                                            Core.SendSettingsToServer(Core.Settings, MyAPIGateway.Session.Player.SteamUserId);
+
+                                            MyAPIGateway.Utilities.ShowMessage(Core.MODSAY, string.Format("For grid name '{0}' building is override {1}.", arguments, Core.Settings.IndestructibleOverrideBuilds.Contains(entId)));
+                                        }
+                                    }
+                                    else
+                                    {
+                                        MyAPIGateway.Utilities.ShowMessage(Core.MODSAY, string.Format("Grid name '{0}' not found...", arguments));
+                                    }
+                                }
+                                else
+                                {
+                                    List<string> marked = new List<string>();
+                                    foreach (string gridname in m_lastFound)
+                                    {
+                                        long entId = GetGridEntityId(gridname);
+                                        if (entId <= 0) continue;
+                                        if (Core.Settings.Indestructible.Contains(entId))
+                                        {
+                                            if (Core.Settings.IndestructibleOverrideBuilds.Contains(entId))
+                                                Core.Settings.IndestructibleOverrideBuilds.Remove(entId);
+                                            else
+                                                Core.Settings.IndestructibleOverrideBuilds.Add(entId);
+                                            marked.Add(gridname);
+                                        }
+                                    }
+
+                                    string list = String.Join(", ", marked.ToArray());
+                                    Core.SendSettingsToServer(Core.Settings, MyAPIGateway.Session.Player.SteamUserId);
+                                    MyAPIGateway.Utilities.ShowMessage(Core.MODSAY, string.Format("Building is override {0} grid names: {1}", marked.Count, list));
                                 }
                             }
                             else if (internalCommand.Equals("clear", StringComparison.OrdinalIgnoreCase))

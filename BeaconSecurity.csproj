@@ -31,19 +31,17 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Sandbox.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Games\Steam\steamapps\common\SpaceEngineers\Bin64\Sandbox.Common.dll</HintPath>
+    <Reference Include="Sandbox.Common">
+      <HintPath>C:\Games\SteamLibrary\SteamApps\common\SpaceEngineers\Bin64\Sandbox.Common.dll</HintPath>
     </Reference>
-    <Reference Include="Sandbox.Game, Version=0.1.5802.35066, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Games\Steam\steamapps\common\SpaceEngineers\Bin64\Sandbox.Game.dll</HintPath>
+    <Reference Include="Sandbox.Game">
+      <HintPath>C:\Games\SteamLibrary\SteamApps\common\SpaceEngineers\Bin64\Sandbox.Game.dll</HintPath>
     </Reference>
     <Reference Include="SpaceEngineers.Game">
-      <HintPath>..\..\..\..\Games\Steam\steamapps\common\SpaceEngineers\Bin64\SpaceEngineers.Game.dll</HintPath>
+      <HintPath>C:\Games\SteamLibrary\SteamApps\common\SpaceEngineers\Bin64\SpaceEngineers.Game.dll</HintPath>
     </Reference>
     <Reference Include="SpaceEngineers.ObjectBuilders">
-      <HintPath>..\..\..\..\Games\Steam\steamapps\common\SpaceEngineers\Bin64\SpaceEngineers.ObjectBuilders.dll</HintPath>
+      <HintPath>C:\Games\SteamLibrary\SteamApps\common\SpaceEngineers\Bin64\SpaceEngineers.ObjectBuilders.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -52,29 +50,20 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="VRage, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Games\Steam\steamapps\common\SpaceEngineers\Bin64\VRage.dll</HintPath>
+    <Reference Include="VRage">
+      <HintPath>C:\Games\SteamLibrary\SteamApps\common\SpaceEngineers\Bin64\VRage.dll</HintPath>
     </Reference>
-    <Reference Include="VRage.Game, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Games\Steam\steamapps\common\SpaceEngineers\Bin64\VRage.Game.dll</HintPath>
+    <Reference Include="VRage.Game">
+      <HintPath>C:\Games\SteamLibrary\SteamApps\common\SpaceEngineers\Bin64\VRage.Game.dll</HintPath>
     </Reference>
-    <Reference Include="VRage.Input, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Games\Steam\steamapps\common\SpaceEngineers\Bin64\VRage.Input.dll</HintPath>
+    <Reference Include="VRage.Library">
+      <HintPath>C:\Games\SteamLibrary\SteamApps\common\SpaceEngineers\Bin64\VRage.Library.dll</HintPath>
     </Reference>
-    <Reference Include="VRage.Library, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Games\Steam\steamapps\common\SpaceEngineers\Bin64\VRage.Library.dll</HintPath>
+    <Reference Include="VRage.Math">
+      <HintPath>C:\Games\SteamLibrary\SteamApps\common\SpaceEngineers\Bin64\VRage.Math.dll</HintPath>
     </Reference>
-    <Reference Include="VRage.Math, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Games\Steam\steamapps\common\SpaceEngineers\Bin64\VRage.Math.dll</HintPath>
-    </Reference>
-    <Reference Include="VRage.Native, Version=0.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Games\Steam\steamapps\common\SpaceEngineers\Bin64\VRage.Native.dll</HintPath>
+    <Reference Include="VRage.Native">
+      <HintPath>C:\Games\SteamLibrary\SteamApps\common\SpaceEngineers\Bin64\VRage.Native.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

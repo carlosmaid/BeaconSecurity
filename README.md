@@ -24,6 +24,7 @@ Setting the zone of finding the owner.
 - /bs find radius - Look for the nearest grid specified radius. Then you can add them using the command /bs add or delete /bs rem
 - /bs add GridName|EntityId - Add a grid to the list indestructible
 - /bs rem GridName|EntityId - Remove the grid from the list indestructible
+- /bs buildon - Overrides flag IndestructibleNoBuilds for specified grid in the list indestructible (removes the ban on building) 
 - /bs clear - Clearing the list
 
 ##Config variables
@@ -51,7 +52,7 @@ Setting the zone of finding the owner.
 
 
 ##Donation
-- PayPal: jimless2015@gmail.com
+- Virtual Visa Card: 4890494111451217
 - Webmoney: R711901402714, Z227667032008
 - Money.Yandex.ru: 41001129000883
 

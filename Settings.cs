@@ -20,6 +20,7 @@ namespace JimLess
         public bool BuildingNotAllowed = true;
         public bool IndestructibleNoBuilds = true;
         public List<long> Indestructible = new List<long>();
+        public List<long> IndestructibleOverrideBuilds = new List<long>();
     }
 
 }
