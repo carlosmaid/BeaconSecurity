@@ -26,8 +26,7 @@ namespace JimLess
                 }
 
                 // check admins grids
-                if (Core.Settings != null && Core.Settings.IndestructibleNoBuilds && Core.Settings.Indestructible.Contains(grid.EntityId) && !Core.Settings.IndestructibleOverrideBuilds.Contains(grid.EntityId)
-                )
+                if (Core.Settings != null && Core.Settings.IndestructibleNoBuilds && Core.Settings.Indestructible.Contains(grid.EntityId) && !Core.Settings.IndestructibleOverrideBuilds.Contains(grid.EntityId))
                 {
                     Logger.Log.Debug(" * Target '{0}' in indestructible list, so block removed...", grid.DisplayName);
                     removing = true;

@@ -10,7 +10,7 @@ namespace JimLess
     public class ChatHandler
     {
         #region TextConstants
-        private static readonly string BSHELP = @"/bs help [1-10] - Show this page or explanation of variables
+        private static readonly string BSHELP = @"/bs help [1-11] - Show this page or explanation of variables
 /bs config  - Show current settings
 admin commands:
 /bs on/off - Enable / disable this mod
@@ -31,10 +31,11 @@ examples:
 "4) OnlyWithZeroSpeed(on/off) -  If this option is enabled, a Beacon Security works only on grid with zero speed. Default: on",
 "5) BuildingNotAllowed(on/off) - Turn on/off the ability to build on grid with the Beacon Security. Default: on",
 "6) IndestructibleNoBuilds(on/off) - Turn on/off the ability to build on indestructible grids. Default: on",
-"7) LimitGridSizes(0-1000) - Limitation on the sizes for grid in meters. If there are excess size, the Beacon Security would't work. Default: 150. 0 - disabled",
-"8) LimitPerFaction(1-100) - Limitation on the number of Beacon Security per faction. Default: 30",
-"9) LimitPerPlayer(1-100) - Limitation on the number of Beacon Security pers player. Default: 3",
-"10) CleaningFrequency(0-3600) - How often is the cleaning in seconds. Default: 5. 0 - disabled"
+"7) IndestructibleGrindOwner(on/off) - Turn on/off the ability to grind own property on indestructible grids. Default: on",
+"8) LimitGridSizes(0-1000) - Limitation on the sizes for grid in meters. If there are excess size, the Beacon Security would't work. Default: 150. 0 - disabled",
+"9) LimitPerFaction(1-100) - Limitation on the number of Beacon Security per faction. Default: 30",
+"10) LimitPerPlayer(1-100) - Limitation on the number of Beacon Security pers player. Default: 3",
+"11) CleaningFrequency(0-3600) - How often is the cleaning in seconds. Default: 5. 0 - disabled"
         };
         #endregion TextConstants
 
@@ -85,10 +86,11 @@ examples:
 4) OnlyWithZeroSpeed(on/off,D:on) = {3}
 5) BuildingNotAllowed(on/off,D:on) = {4}
 6) IndestructibleNoBuilds(on/off,D:on) = {5}
-7) LimitGridSizes(0-1000,D:150) = {6}
-8) LimitPerFaction(1-100,D:30) = {7}
-9) LimitPerPlayer(1-100,D:3) = {8}
-10) CleaningFrequency(0-3600,D:5) = {9}
+7) IndestructibleGrindOwner(on/off,D:on) = {6}
+8) LimitGridSizes(0-1000,D:150) = {7}
+9) LimitPerFaction(1-100,D:30) = {8}
+10) LimitPerPlayer(1-100,D:3) = {9}
+11) CleaningFrequency(0-3600,D:5) = {10}
 ",
     Core.Settings.DelayBeforeTurningOn,
     Core.Settings.DistanceBeforeTurningOn,
@@ -96,6 +98,7 @@ examples:
     Core.Settings.OnlyWithZeroSpeed,
     Core.Settings.BuildingNotAllowed,
     Core.Settings.IndestructibleNoBuilds,
+    Core.Settings.IndestructibleGrindOwner,
     Core.Settings.LimitGridSizes,
     Core.Settings.LimitPerFaction,
     Core.Settings.LimitPerPlayer,
@@ -144,9 +147,9 @@ examples:
                                 {
                                     string gridName = GetGridName(entId);
                                     if (gridName != null)
-                                        GridNames.Add(string.Format("'{0}'{1}", gridName, Core.Settings.IndestructibleOverrideBuilds.Contains(entId)?"[BO]":""));
+                                        GridNames.Add(string.Format("'{0}'{1}{2}", gridName, Core.Settings.IndestructibleOverrideBuilds.Contains(entId) ? "[BO]" : "", Core.Settings.IndestructibleOverrideGrindOwner.Contains(entId) ? "[GO]" : ""));
                                     else
-                                        GridNamesNotFound.Add(string.Format("id[{0}]{1}", entId, Core.Settings.IndestructibleOverrideBuilds.Contains(entId) ? "[BO]" : ""));
+                                        GridNamesNotFound.Add(string.Format("id[{0}]{1}{2}", entId, Core.Settings.IndestructibleOverrideBuilds.Contains(entId) ? "[BO]" : "", Core.Settings.IndestructibleOverrideGrindOwner.Contains(entId) ? "[GO]" : ""));
                                 }
                                 string list = String.Join(", ", GridNames.ToArray());
                                 string nflist = String.Join(", ", GridNamesNotFound.ToArray());
@@ -299,6 +302,57 @@ examples:
                                     MyAPIGateway.Utilities.ShowMessage(Core.MODSAY, string.Format("Building is override {0} grid names: {1}", marked.Count, list));
                                 }
                             }
+                            else if (internalCommand.Equals("go", StringComparison.OrdinalIgnoreCase) || internalCommand.Equals("grindon", StringComparison.OrdinalIgnoreCase))
+                            {
+                                if (arguments.Length > 0)
+                                {
+                                    long entId = 0;
+                                    if (!long.TryParse(arguments, out entId))
+                                        entId = GetGridEntityId(arguments);
+                                    if (entId > 0)
+                                    {
+                                        if (!Core.Settings.Indestructible.Contains(entId))
+                                        {
+                                            MyAPIGateway.Utilities.ShowMessage(Core.MODSAY, string.Format("Grid name '{0}' not found in list...", arguments));
+                                        }
+                                        else
+                                        {
+                                            if (Core.Settings.IndestructibleOverrideGrindOwner.Contains(entId))
+                                                Core.Settings.IndestructibleOverrideGrindOwner.Remove(entId);
+                                            else
+                                                Core.Settings.IndestructibleOverrideGrindOwner.Add(entId);
+                                            Core.SendSettingsToServer(Core.Settings, MyAPIGateway.Session.Player.SteamUserId);
+
+                                            MyAPIGateway.Utilities.ShowMessage(Core.MODSAY, string.Format("For grid name '{0}' grind own property is override {1}.", arguments, Core.Settings.IndestructibleOverrideGrindOwner.Contains(entId)));
+                                        }
+                                    }
+                                    else
+                                    {
+                                        MyAPIGateway.Utilities.ShowMessage(Core.MODSAY, string.Format("Grid name '{0}' not found...", arguments));
+                                    }
+                                }
+                                else
+                                {
+                                    List<string> marked = new List<string>();
+                                    foreach (string gridname in m_lastFound)
+                                    {
+                                        long entId = GetGridEntityId(gridname);
+                                        if (entId <= 0) continue;
+                                        if (Core.Settings.Indestructible.Contains(entId))
+                                        {
+                                            if (Core.Settings.IndestructibleOverrideGrindOwner.Contains(entId))
+                                                Core.Settings.IndestructibleOverrideGrindOwner.Remove(entId);
+                                            else
+                                                Core.Settings.IndestructibleOverrideGrindOwner.Add(entId);
+                                            marked.Add(gridname);
+                                        }
+                                    }
+
+                                    string list = String.Join(", ", marked.ToArray());
+                                    Core.SendSettingsToServer(Core.Settings, MyAPIGateway.Session.Player.SteamUserId);
+                                    MyAPIGateway.Utilities.ShowMessage(Core.MODSAY, string.Format("Grind own property is override {0} grid names: {1}", marked.Count, list));
+                                }
+                            }
                             else if (internalCommand.Equals("clear", StringComparison.OrdinalIgnoreCase))
                             {
                                 Core.Settings.Indestructible.Clear();
@@ -440,7 +494,21 @@ examples:
                                         }
                                         ResultMessage = string.Format("IndestructibleNoBuilds changed to {0}", (Core.Settings.IndestructibleNoBuilds) ? "On" : "Off");
                                     }
-                                    else if (argument[0].Equals("7") || argument[0].Equals("LimitGridSizes", StringComparison.OrdinalIgnoreCase))
+                                    else if (argument[0].Equals("7") || argument[0].Equals("IndestructibleGrindOwner", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (argument[1].Equals("on", StringComparison.OrdinalIgnoreCase) || argument[1].Equals("true", StringComparison.OrdinalIgnoreCase))
+                                        {
+                                            Core.Settings.IndestructibleGrindOwner = true;
+                                            changed = true;
+                                        }
+                                        else if (argument[1].Equals("off", StringComparison.OrdinalIgnoreCase) || argument[1].Equals("false", StringComparison.OrdinalIgnoreCase))
+                                        {
+                                            Core.Settings.IndestructibleGrindOwner = false;
+                                            changed = true;
+                                        }
+                                        ResultMessage = string.Format("IndestructibleGrindOwner changed to {0}", (Core.Settings.IndestructibleGrindOwner) ? "On" : "Off");
+                                    }
+                                    else if (argument[0].Equals("8") || argument[0].Equals("LimitGridSizes", StringComparison.OrdinalIgnoreCase))
                                     {
                                         try
                                         {
@@ -461,7 +529,7 @@ examples:
                                             MyAPIGateway.Utilities.ShowMessage(Core.MODSAY, string.Format("Incorrect number. {0}", ex.Message));
                                         }
                                     }
-                                    else if (argument[0].Equals("8") || argument[0].Equals("LimitPerFaction", StringComparison.OrdinalIgnoreCase))
+                                    else if (argument[0].Equals("9") || argument[0].Equals("LimitPerFaction", StringComparison.OrdinalIgnoreCase))
                                     {
                                         try
                                         {
@@ -482,7 +550,7 @@ examples:
                                             MyAPIGateway.Utilities.ShowMessage(Core.MODSAY, string.Format("Incorrect number. {0}", ex.Message));
                                         }
                                     }
-                                    else if (argument[0].Equals("9") || argument[0].Equals("LimitPerPlayer", StringComparison.OrdinalIgnoreCase))
+                                    else if (argument[0].Equals("10") || argument[0].Equals("LimitPerPlayer", StringComparison.OrdinalIgnoreCase))
                                     {
                                         try
                                         {
@@ -503,7 +571,7 @@ examples:
                                             MyAPIGateway.Utilities.ShowMessage(Core.MODSAY, string.Format("Incorrect number. {0}", ex.Message));
                                         }
                                     }
-                                    else if (argument[0].Equals("10") || argument[0].Equals("CleaningFrequency", StringComparison.OrdinalIgnoreCase))
+                                    else if (argument[0].Equals("11") || argument[0].Equals("CleaningFrequency", StringComparison.OrdinalIgnoreCase))
                                     {
                                         try
                                         {

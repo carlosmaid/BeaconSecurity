@@ -13,7 +13,7 @@ Setting delay beacon
 Setting the zone of finding the owner.
 
 ##Chat Commands
-- /bs help [1-10] - Show this page or explanation of variables
+- /bs help [1-11] - Show this page or explanation of variables
 - /bs config  - Show current settings
 
 ###Admin chat commands
@@ -25,6 +25,7 @@ Setting the zone of finding the owner.
 - /bs add GridName|EntityId - Add a grid to the list indestructible
 - /bs rem GridName|EntityId - Remove the grid from the list indestructible
 - /bs buildon - Overrides flag IndestructibleNoBuilds for specified grid in the list indestructible (removes the ban on building) 
+- /bs grindon - Overrides flag IndestructibleGrindOwner for specified grid in the list indestructible (allow grind own property)
 - /bs clear - Clearing the list
 
 ##Config variables
@@ -34,10 +35,11 @@ Setting the zone of finding the owner.
 4. OnlyWithZeroSpeed(on/off) -  If this option is enabled, a Beacon Security works only on grid with zero speed. Default: on
 5. BuildingNotAllowed(on/off) - Turn on/off the ability to build on grid with the Beacon Security. Default: on
 6. IndestructibleNoBuilds(on/off) - Turn on/off the ability to build on indestructible grids. Default: on
-7. LimitGridSizes(0-1000) - Limitation on the sizes for grid in meters. If there are excess size, the Beacon Security would't work. Default: 150. 0 - disabled
-8. LimitPerFaction(1-100) - Limitation on the number of Beacon Security per faction. Default: 30
-9. LimitPerPlayer(1-100) - Limitation on the number of Beacon Security pers player. Default: 3
-10. CleaningFrequency(0-3600) - How often is the cleaning in seconds. Default: 5. 0 - disabled
+7. IndestructibleGrindOwner(on/off) - Turn on/off the ability to grind own property on indestructible grids. Default: on
+8. LimitGridSizes(0-1000) - Limitation on the sizes for grid in meters. If there are excess size, the Beacon Security would't work. Default: 150. 0 - disabled
+9. LimitPerFaction(1-100) - Limitation on the number of Beacon Security per faction. Default: 30
+10. LimitPerPlayer(1-100) - Limitation on the number of Beacon Security pers player. Default: 3
+11. CleaningFrequency(0-3600) - How often is the cleaning in seconds. Default: 5. 0 - disabled
 
 ##Some chat commands examples
 ```
@@ -52,10 +54,11 @@ Setting the zone of finding the owner.
 
 
 ##Donation
+- PayPal: jimless2015@gmail.com
 - Virtual Visa Card: 4890494111451217
 - Webmoney: R711901402714, Z227667032008
 - Money.Yandex.ru: 41001129000883
 
-words: anti-grief, antigrief, indestructible, destructible, admin, private, property, zone, safezone, Beacon, Security
+words: anti-grief, antigrief, indestructible, destructible, grind, weld, admin, private, property, zone, safezone, Beacon, Security
 
 © 2015 JimLess
