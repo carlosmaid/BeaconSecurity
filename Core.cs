@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using VRage.Game;
 using VRage.Game.Components;
+using VRage.Game.ModAPI;
 using VRage.ModAPI;
 
 namespace JimLess
@@ -294,7 +295,7 @@ namespace JimLess
                 return;
             List<Sandbox.ModAPI.Ingame.IMyTerminalBlock> blocks = new List<Sandbox.ModAPI.Ingame.IMyTerminalBlock>();
             gridTerminal.GetBlocks(blocks);
-            HashSet<Sandbox.ModAPI.Ingame.IMyCubeGrid> applied = new HashSet<Sandbox.ModAPI.Ingame.IMyCubeGrid>();
+            HashSet<VRage.Game.ModAPI.Ingame.IMyCubeGrid> applied = new HashSet<VRage.Game.ModAPI.Ingame.IMyCubeGrid>();
             foreach (var block in blocks)
             {
                 if (applied.Contains(block.CubeGrid))

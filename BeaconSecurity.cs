@@ -1,11 +1,12 @@
-﻿using Sandbox.Common.Components;
-using Sandbox.Common.ObjectBuilders;
+﻿using Sandbox.Common.ObjectBuilders;
 using Sandbox.Game.Entities;
 using Sandbox.ModAPI;
+using SpaceEngineers.Game.ModAPI.Ingame;
 using System;
 using System.Collections.Generic;
 using VRage.Game;
 using VRage.Game.Components;
+using VRage.Game.ModAPI;
 using VRage.ModAPI;
 using VRage.ObjectBuilders;
 using VRageMath;
@@ -65,7 +66,7 @@ namespace JimLess
                             return true;
                     }
 
-                    var solar = block as Sandbox.ModAPI.Ingame.IMySolarPanel;
+                    var solar = block as IMySolarPanel;
                     if (solar != null)
                     {
                         if (solar.IsWorking)

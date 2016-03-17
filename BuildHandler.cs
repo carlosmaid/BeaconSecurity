@@ -1,6 +1,7 @@
 ﻿using Sandbox.Game.Entities;
 using Sandbox.ModAPI;
 using System;
+using VRage.Game.ModAPI;
 
 namespace JimLess
 {

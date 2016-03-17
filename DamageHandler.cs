@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using VRage.Game;
 using VRage.Game.Entity;
+using VRage.Game.ModAPI;
 using VRage.ModAPI;
 
 namespace JimLess
