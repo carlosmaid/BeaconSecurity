@@ -70,7 +70,7 @@ namespace JimLess
                         {
                             MyRelationsBetweenPlayerAndBlock relation = targetFunctionalBlock.GetUserRelationToOwner(player.IdentityId);
                             Logger.Log.Debug(" relation '{0}' is {1} == {2}", relation, player.IdentityId, targetFunctionalBlock.OwnerId);
-                            owner = (relation == MyRelationsBetweenPlayerAndBlock.Owner || relation == MyRelationsBetweenPlayerAndBlock.FactionShare || relation == MyRelationsBetweenPlayerAndBlock.NoOwnership) ? true : false;
+                            owner = (relation == MyRelationsBetweenPlayerAndBlock.Owner || relation == MyRelationsBetweenPlayerAndBlock.NoOwnership) ? true : false;
                         }
                     }
                 }
