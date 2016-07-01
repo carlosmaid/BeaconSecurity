@@ -1,12 +1,8 @@
-﻿using Sandbox.Common.ObjectBuilders;
-using Sandbox.Game.Entities;
-using Sandbox.Game.Entities.Character;
-using Sandbox.Game.World;
+﻿using Sandbox.Game.Entities;
 using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
 using VRage.Game;
-using VRage.Game.Entity;
 using VRage.Game.ModAPI;
 using VRage.ModAPI;
 
@@ -43,7 +39,7 @@ namespace JimLess
                     if (info.Type == MyDamageType.Grind)
                     {
                         IMyPlayer player = null;
-                        if (attackerEntity is Sandbox.ModAPI.Ingame.IMyShipGrinder)
+                        if (attackerEntity is IMyShipGrinder)
                             player = MyAPIGateway.Players.GetPlayerControllingEntity(attackerEntity.GetTopMostParent());
 
                         if (player == null)

@@ -1,7 +1,7 @@
 ﻿using Sandbox.Common.ObjectBuilders;
 using Sandbox.Game.Entities;
 using Sandbox.ModAPI;
-using SpaceEngineers.Game.ModAPI.Ingame;
+using SpaceEngineers.Game.ModAPI;
 using System;
 using System.Collections.Generic;
 using VRage.Game;
@@ -48,8 +48,8 @@ namespace JimLess
                 if (grid == null)
                     return false;
 
-                Sandbox.ModAPI.Ingame.IMyGridTerminalSystem gridTerminal = MyAPIGateway.TerminalActionsHelper.GetTerminalSystemForGrid(grid);
-                List<Sandbox.ModAPI.Ingame.IMyTerminalBlock> blocks = new List<Sandbox.ModAPI.Ingame.IMyTerminalBlock>();
+                IMyGridTerminalSystem gridTerminal = MyAPIGateway.TerminalActionsHelper.GetTerminalSystemForGrid(grid);
+                List<IMyTerminalBlock> blocks = new List<IMyTerminalBlock>();
                 gridTerminal.GetBlocks(blocks);
                 foreach (var block in blocks)
                 {
@@ -59,7 +59,7 @@ namespace JimLess
                             return true;
                     }
 
-                    var battery = block as Sandbox.ModAPI.Ingame.IMyBatteryBlock;
+                    var battery = block as IMyBatteryBlock;
                     if (battery != null)
                     {
                         if (battery.CurrentStoredPower > 0f && battery.IsWorking)
@@ -119,34 +119,43 @@ namespace JimLess
 
         public override void UpdateBeforeSimulation10()
         {
+            if (!IsBeaconSecurity)
+                return;
+
+            base.UpdateBeforeSimulation10();
+
+            if (Core.Settings == null || MyAPIGateway.Session == null || MyAPIGateway.Utilities == null || MyAPIGateway.Multiplayer == null)
+            {
+                Logger.Log.Debug("UpdateBeforeSimulation10() - Exit early");
+                return;
+            }
+
+            if (!Core.Settings.Enabled) // if some on just turn off the switch, try to turn off all BS
+            {
+                if (Core.IsServer && m_block.Enabled)
+                {
+                    Logger.Log.Debug("Beacon Security is EMERGENCY deactivated {0} ownerid {1}...", m_block.EntityId, m_block.OwnerId);
+                    RequestEnable(false);
+                }
+                return;
+            }
+
+            // skip noowner BeaconSecurity
+            if (m_block.OwnerId == 0)
+            {
+                if (m_block.Enabled)
+                    RequestEnable(false);
+                return;
+            }
+
+            if (!Core.IsServer)
+            {
+                Logger.Log.Debug("UpdateBeforeSimulation10() - Exit !Core.IsServer");
+                return;
+            }
+
             try
             {
-                base.UpdateBeforeSimulation10();
-
-                if (Core.Settings == null || MyAPIGateway.Session == null || MyAPIGateway.Utilities == null || MyAPIGateway.Multiplayer == null)
-                    return;
-
-                if (!Core.Settings.Enabled) // if some on just turn off the switch, try to turn off all BS
-                {
-                    if (Core.IsServer && m_block.Enabled)
-                    {
-                        Logger.Log.Debug("Beacon Security is EMERGENCY deactivated {0} ownerid {1}...", m_block.EntityId, m_block.OwnerId);
-                        RequestEnable(false);
-                    }
-                    return;
-                }
-
-                // skip noowner BeaconSecurity
-                if (m_block.OwnerId == 0)
-                {
-                    if (m_block.Enabled)
-                        RequestEnable(false);
-                    return;
-                }
-
-                if (!Core.IsServer)
-                    return;
-
                 DateTime DTNow = DateTime.Now;
                 MyCubeGrid grid = Entity.GetTopMostParent() as MyCubeGrid;
 

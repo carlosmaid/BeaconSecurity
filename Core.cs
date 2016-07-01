@@ -274,10 +274,10 @@ namespace JimLess
             if (grid == null)
                 return false;
 
-            Sandbox.ModAPI.Ingame.IMyGridTerminalSystem gridTerminal = MyAPIGateway.TerminalActionsHelper.GetTerminalSystemForGrid(grid);
+            IMyGridTerminalSystem gridTerminal = MyAPIGateway.TerminalActionsHelper.GetTerminalSystemForGrid(grid);
             if (gridTerminal == null)
                 return false;
-            List<Sandbox.ModAPI.Ingame.IMyTerminalBlock> blocks = new List<Sandbox.ModAPI.Ingame.IMyTerminalBlock>();
+            List<IMyTerminalBlock> blocks = new List<IMyTerminalBlock>();
             gridTerminal.GetBlocks(blocks);
             foreach (var block in blocks)
             {
@@ -290,10 +290,10 @@ namespace JimLess
 
         public static void gridDestructible(IMyCubeGrid grid, bool enable)
         {
-            Sandbox.ModAPI.Ingame.IMyGridTerminalSystem gridTerminal = MyAPIGateway.TerminalActionsHelper.GetTerminalSystemForGrid(grid);
+            IMyGridTerminalSystem gridTerminal = MyAPIGateway.TerminalActionsHelper.GetTerminalSystemForGrid(grid);
             if (gridTerminal == null)
                 return;
-            List<Sandbox.ModAPI.Ingame.IMyTerminalBlock> blocks = new List<Sandbox.ModAPI.Ingame.IMyTerminalBlock>();
+            List<IMyTerminalBlock> blocks = new List<IMyTerminalBlock>();
             gridTerminal.GetBlocks(blocks);
             HashSet<VRage.Game.ModAPI.Ingame.IMyCubeGrid> applied = new HashSet<VRage.Game.ModAPI.Ingame.IMyCubeGrid>();
             foreach (var block in blocks)

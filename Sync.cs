@@ -1,5 +1,4 @@
-﻿using Sandbox.Common;
-using Sandbox.ModAPI;
+﻿using Sandbox.ModAPI;
 using System;
 using VRage.Game;
 using VRage.Game.ModAPI;
@@ -105,7 +104,7 @@ namespace JimLess
                             IMyPlayer player = MyAPIGateway.Session.Player;
                             if (player != null) // check this for dedicated servers
                             {
-                                MyRelationsBetweenPlayerAndBlock relation = (entity as Sandbox.ModAPI.Ingame.IMyFunctionalBlock).GetUserRelationToOwner(player.PlayerID);
+                                MyRelationsBetweenPlayerAndBlock relation = (entity as IMyFunctionalBlock).GetUserRelationToOwner(player.PlayerID);
                                 if (relation == MyRelationsBetweenPlayerAndBlock.Owner || relation == MyRelationsBetweenPlayerAndBlock.FactionShare)
                                 {  // if player has rights to this beacon, show message
                                     MyAPIGateway.Utilities.ShowNotification(string.Format("{0} beacon security called '{1}' is deactivated now!", (relation == MyRelationsBetweenPlayerAndBlock.FactionShare) ? "Faction" : "Your", (entity.GameLogic as BeaconSecurity).DisplayName), 5000, MyFontEnum.Red);
@@ -132,7 +131,7 @@ namespace JimLess
                             IMyPlayer player = MyAPIGateway.Session.Player;
                             if (player != null) // check this for dedicated servers
                             {
-                                MyRelationsBetweenPlayerAndBlock relation = (entity as Sandbox.ModAPI.Ingame.IMyFunctionalBlock).GetUserRelationToOwner(player.PlayerID);
+                                MyRelationsBetweenPlayerAndBlock relation = (entity as IMyFunctionalBlock).GetUserRelationToOwner(player.PlayerID);
                                 if (relation == MyRelationsBetweenPlayerAndBlock.Owner || relation == MyRelationsBetweenPlayerAndBlock.FactionShare)
                                 {  // if player has rights to this beacon, show message
                                     MyAPIGateway.Utilities.ShowNotification(string.Format("{0} beacon security called '{1}' is activated now!", (relation == MyRelationsBetweenPlayerAndBlock.FactionShare) ? "Faction" : "Your", (entity.GameLogic as BeaconSecurity).DisplayName), 5000, MyFontEnum.Green);
