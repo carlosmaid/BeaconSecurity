@@ -1,13 +1,19 @@
 ﻿using Sandbox.Game.Entities;
+using Sandbox.ModAPI;
 using System;
+using System.Collections.Generic;
+using System.Threading;
 using VRage.Game.ModAPI;
+using VRage.Library.Utils;
+using VRageMath;
 
 namespace JimLess
 {
     class BuildHandler
     {
 
-
+        private static MyTimer.TimerEventHandler m_handler;
+        private static MyTimer.TimerEventHandler m_handler2;
         public static void grid_OnBlockAdded(IMySlimBlock obj)
         {
             try
@@ -34,9 +40,13 @@ namespace JimLess
 
                 if (removing)
                 {
-                    (grid as IMyCubeGrid).RemoveBlock(obj, true);
-                    if (obj.FatBlock != null)
-                        obj.FatBlock.Close();
+                    Logger.Log.Debug("RTY Grid: {0} {1} OBJ: {2} {3} POS: {4} {5}", grid, grid is IMyCubeGrid, obj, obj is IMySlimBlock, obj.Position, obj.CubeGrid.PositionComp);
+                    m_handler = new MyTimer.TimerEventHandler((a, b, c, d, e) =>
+                    {
+                        TryToRemoveBlockFromGrid((grid as IMyCubeGrid), obj);
+                    });
+
+                    MyTimer.StartOneShot(10, m_handler);
                 }
             }
             catch (Exception ex)
@@ -44,6 +54,29 @@ namespace JimLess
                 Logger.Log.Error("Exception grid_OnBlockAdded in {0}", ex.Message);
             }
 
+        }
+
+        private static void TryToRemoveBlockFromGrid(IMyCubeGrid grid, IMySlimBlock obj)
+        {
+            Logger.Log.Debug("RTY TryToRemoveBlockFromGrid {0} {1}", grid, obj);
+            if (grid.GetCubeBlock(obj.Position) != obj)
+                return;
+
+            Logger.Log.Debug("RTY repeat");
+            grid.RemoveBlock(obj, true);
+            if (obj.FatBlock != null)
+                obj.FatBlock.Close();
+
+            if (grid.GetCubeBlock(obj.Position) == obj)
+            {
+                Logger.Log.Debug("RTY repeat SET ANOTHER HANDLER");
+                m_handler2 = new MyTimer.TimerEventHandler((a, b, c, d, e) =>
+                {
+                    TryToRemoveBlockFromGrid(grid, obj);
+                });
+
+                MyTimer.StartOneShot(10, m_handler2);
+            }
         }
 
 
