@@ -20,13 +20,15 @@ namespace JimLess
 
         public static Settings Settings { get; private set; }
         internal static void setSettings(Settings settings) { Settings = settings; Flush(); }
-        
+
         public static bool Inited { get; private set; }
         public static bool IsServer { get; private set; }
 
         private int Frame;
         private DateTime m_cleaning = DateTime.MinValue;
         private DateTime m_settingRequested = DateTime.MinValue;
+
+        static List<IMySlimBlock> queueRemoveBlocks = new List<IMySlimBlock>();
 
         List<IMyCubeGrid> eventedGrids = new List<IMyCubeGrid>();
 
@@ -152,6 +154,18 @@ namespace JimLess
                             Logger.Log.Debug("OnBlockAdded event added to {0} grids.", grid.EntityId);
                         }
                     }
+
+                    // Remove block from queues
+                    foreach (var block in queueRemoveBlocks)
+                    {
+                        IMyCubeGrid grid = block.CubeGrid as IMyCubeGrid;
+                        if (grid == null)
+                            continue;
+                        grid.RemoveBlock(block, true);
+                        if (block.FatBlock != null)
+                            block.FatBlock.Close();
+                    }
+                    queueRemoveBlocks.Clear();
                 }
 
                 if (Settings.CleaningFrequency == 0)
@@ -267,6 +281,11 @@ namespace JimLess
             {
                 Logger.Log.Error("EXCEPTION at BeaconSecurity.UpdateBeforeSimulation(): {0} {1}", ex.Message, ex.StackTrace);
             }
+        }
+
+        public static void EnqueueRemoveBlock(IMySlimBlock block)
+        {
+            queueRemoveBlocks.Add(block);
         }
 
         public static bool isActiveBeaconSecurity(IMyCubeGrid grid)
