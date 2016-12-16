@@ -35,16 +35,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Sandbox.Common">
-      <HintPath>C:\Games\SteamLibrary\SteamApps\common\SpaceEngineers\Bin64\Sandbox.Common.dll</HintPath>
+      <HintPath>G:\Games\SteamLibrary\steamapps\common\SpaceEngineers\Bin64\Sandbox.Common.dll</HintPath>
     </Reference>
     <Reference Include="Sandbox.Game">
-      <HintPath>C:\Games\SteamLibrary\SteamApps\common\SpaceEngineers\Bin64\Sandbox.Game.dll</HintPath>
+      <HintPath>G:\Games\SteamLibrary\steamapps\common\SpaceEngineers\Bin64\Sandbox.Game.dll</HintPath>
     </Reference>
     <Reference Include="SpaceEngineers.Game">
-      <HintPath>C:\Games\SteamLibrary\SteamApps\common\SpaceEngineers\Bin64\SpaceEngineers.Game.dll</HintPath>
+      <HintPath>G:\Games\SteamLibrary\steamapps\common\SpaceEngineers\Bin64\SpaceEngineers.Game.dll</HintPath>
     </Reference>
     <Reference Include="SpaceEngineers.ObjectBuilders">
-      <HintPath>C:\Games\SteamLibrary\SteamApps\common\SpaceEngineers\Bin64\SpaceEngineers.ObjectBuilders.dll</HintPath>
+      <HintPath>G:\Games\SteamLibrary\steamapps\common\SpaceEngineers\Bin64\SpaceEngineers.ObjectBuilders.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -54,19 +54,16 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="VRage">
-      <HintPath>C:\Games\SteamLibrary\SteamApps\common\SpaceEngineers\Bin64\VRage.dll</HintPath>
+      <HintPath>G:\Games\SteamLibrary\steamapps\common\SpaceEngineers\Bin64\VRage.dll</HintPath>
     </Reference>
     <Reference Include="VRage.Game">
-      <HintPath>C:\Games\SteamLibrary\SteamApps\common\SpaceEngineers\Bin64\VRage.Game.dll</HintPath>
+      <HintPath>G:\Games\SteamLibrary\steamapps\common\SpaceEngineers\Bin64\VRage.Game.dll</HintPath>
     </Reference>
     <Reference Include="VRage.Library">
-      <HintPath>C:\Games\SteamLibrary\SteamApps\common\SpaceEngineers\Bin64\VRage.Library.dll</HintPath>
+      <HintPath>G:\Games\SteamLibrary\steamapps\common\SpaceEngineers\Bin64\VRage.Library.dll</HintPath>
     </Reference>
     <Reference Include="VRage.Math">
-      <HintPath>C:\Games\SteamLibrary\SteamApps\common\SpaceEngineers\Bin64\VRage.Math.dll</HintPath>
-    </Reference>
-    <Reference Include="VRage.Native">
-      <HintPath>C:\Games\SteamLibrary\SteamApps\common\SpaceEngineers\Bin64\VRage.Native.dll</HintPath>
+      <HintPath>G:\Games\SteamLibrary\steamapps\common\SpaceEngineers\Bin64\VRage.Math.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

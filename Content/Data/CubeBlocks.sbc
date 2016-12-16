@@ -25,7 +25,7 @@
       </Components>
       <CriticalComponent Subtype="RadioCommunication" Index="0" />
       <MountPoints>
-        <MountPoint Side="Bottom" StartX="0.1" StartY="0.1" EndX="0.9" EndY="0.9" />
+        <MountPoint Side="Bottom" StartX="0.1" StartY="0.1" EndX="0.9" EndY="0.9" Default="true" />
         <MountPoint Side="Top" StartX="0.1" StartY="0.1" EndX="0.9" EndY="0.9" />
         <MountPoint Side="Left" StartX="0.175" StartY="0.1" EndX="0.825" EndY="0.9" />
         <MountPoint Side="Right" StartX="0.175" StartY="0.1" EndX="0.825" EndY="0.9" />
@@ -58,6 +58,7 @@
       <ModelOffset x="0" y="0" z="0" />
       <Model>Models\Cubes\Small\beacon.mwm</Model>
       <Components>
+        <Component Subtype="SteelPlate" Count="1" />
         <Component Subtype="Construction" Count="1" />
         <Component Subtype="SmallTube" Count="1" />
         <Component Subtype="Computer" Count="1" />
